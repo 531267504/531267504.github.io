@@ -1,0 +1,368 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  Java数据结构与算法学习笔记——排序算法 |   roboky的个人空间 </title>
+
+ 
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+
+  <link rel="stylesheet" href="/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <header class="header">
+	
+  <nav class="header-nav">        
+   
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-menu">          
+              
+            
+
+              <a class="header-menu-link" id="header-menu-home" href="/">首页</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-archives" href="/archives">归档</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-tags" href="/tags">标签</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-categories" href="/categories">分类</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-about" href="/about">关于</a>     
+
+            
+            
+            
+
+              <a class="iconfont icon-menu-search header-menu-link" id="header-menu-search"></a>
+
+            
+                
+    </div>  
+    
+  </nav>
+</header>   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+
+	<p class="post-title">	
+		Java数据结构与算法学习笔记——排序算法
+	</p>
+			
+
+	<div class="meta-info">	
+	<span>
+		8月 01, 2018
+	</span>
+
+	
+	
+		<i class="iconfont icon-words"></i>
+		<span>
+			2529
+		</span>
+	
+</div>
+
+</div> 
+	 
+
+	  <div class="post-content slideDownMin">
+
+		
+
+			
+					<hr>
+<p>​    上一篇博客我们实现的数组结构是无序的，也就是纯粹按照插入顺序进行排列，那么如何进行元素排序，本篇博客我们介绍几种简单的排序算法。 <a id="more"></a></p>
+<h2 id="1-冒泡排序"><a href="#1-冒泡排序" class="headerlink" title="1. 冒泡排序"></a>1. 冒泡排序</h2><p>冒泡排序（Bubble Sort），是一种计算机科学领域的较简单的<a href="https://baike.baidu.com/item/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/5399605" target="_blank" rel="noopener">排序算法</a>。 </p>
+<h3 id="冒泡排序算法的原理："><a href="#冒泡排序算法的原理：" class="headerlink" title="冒泡排序算法的原理："></a>冒泡排序算法的原理：</h3><ol>
+<li>比较相邻的元素。如果第一个比第二个大，就交换他们两个。</li>
+<li>对每一对相邻元素做同样的工作，从开始第一对到结尾的最后一对。在这一点，最后的元素应该会是最大的数。</li>
+<li>针对所有的元素重复以上的步骤，除了最后一个。</li>
+<li>持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。</li>
+</ol>
+<p><img src="\postsource\java数据结构与算法\3\1.gif" alt=""></p>
+<h3 id="Java代码实现："><a href="#Java代码实现：" class="headerlink" title="Java代码实现："></a>Java代码实现：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="keyword">int</span> []arr)</span> </span>&#123;</span><br><span class="line">    	<span class="comment">//i表示一共循环多少轮</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i =<span class="number">0</span>;i&lt;arr.length-<span class="number">1</span>;i++) &#123;</span><br><span class="line">            <span class="comment">//加一个开关，当排序已经完成时不再继续循环</span></span><br><span class="line">            <span class="keyword">boolean</span> flag = <span class="keyword">true</span>;</span><br><span class="line">            <span class="comment">//每轮参与比较元素的下标，每轮比较后需要比较的元素减少1</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;arr.length-i-<span class="number">1</span>;j++) &#123;<span class="comment">//-1为了防止溢出</span></span><br><span class="line">                <span class="keyword">if</span>(arr[j]&gt;arr[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                    <span class="keyword">int</span> temp = arr[j];</span><br><span class="line">                    arr[j]=arr[j+<span class="number">1</span>];</span><br><span class="line">                    arr[j+<span class="number">1</span>]=temp;</span><br><span class="line">                    falg = <span class="keyword">false</span>;</span><br><span class="line">            	&#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(flag)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="冒泡排序时间复杂度分析"><a href="#冒泡排序时间复杂度分析" class="headerlink" title="冒泡排序时间复杂度分析"></a>冒泡排序时间复杂度分析</h3><p>​    设数组元素个数为Ｎ，则第一轮排序有 $N-1$ 次比较，第二轮有 $N-2$ 次，如此类推，这种序列的求和公式为：</p>
+<p>　　$（N-1）+（N-2）+…+1 = N*（N-1）/2$</p>
+<p>​    当Ｎ的值足够大时，按照计算时间复杂度的原则，去掉常数，去掉最高项系数，其复杂度为 $O(N^2)$ </p>
+<p>​    在加入 <code>flag</code> 后，对于一个有序数组，算法完成第一次外层循环后就会返回。实际只发生了$N-1$次比较，所以最好的情况下，该算法的时间复杂度为$O(N)$ 。</p>
+<p>​    其实无论何时，只要看见一个循环嵌套在另一个循环中，我们都可以怀疑这个算法的运行时间为 $O(N^2)$级，外层循环执行 $N$ 次，内层循环对每一次外层循环都执行N次（或者几分之$N$次）。这就意味着大约需要执行$N^2$次某个基本操作。 </p>
+<h2 id="2-选择排序"><a href="#2-选择排序" class="headerlink" title="2. 选择排序"></a>2. 选择排序</h2><p>​    选择排序（Selection sort）是一种简单直观的<a href="https://baike.baidu.com/item/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">排序算法</a>。它的工作原理是每一次从待排序的数据元素中选出最小（或最大）的一个元素，存放在序列的起始位置，直到全部待排序的数据元素排完。  </p>
+<h3 id="选择排序原理"><a href="#选择排序原理" class="headerlink" title="选择排序原理"></a>选择排序原理</h3><p><img src="\postsource\java数据结构与算法\3\selSort.jpg" alt=""></p>
+<h3 id="Java代码实现：-1"><a href="#Java代码实现：-1" class="headerlink" title="Java代码实现："></a>Java代码实现：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">selectSort</span><span class="params">(<span class="keyword">int</span>[]a)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> minIndex=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> temp=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>((a==<span class="keyword">null</span>)||(a.length==<span class="number">0</span>))</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;a.length-<span class="number">1</span>;i++)&#123;</span><br><span class="line">        minIndex=i;<span class="comment">//无序区的最小数据数组下标</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span>  j=i+<span class="number">1</span>;j&lt;a.length;j++)&#123;</span><br><span class="line">            <span class="comment">//在无序区中循环两两比对找到最小数据并保存其数组下标</span></span><br><span class="line">            <span class="keyword">if</span>(a[j]&lt;a[minIndex])&#123;</span><br><span class="line">                minIndex=j; </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//将最小元素放到本次循环的前端</span></span><br><span class="line">        <span class="keyword">if</span>(i != minIndex )&#123;</span><br><span class="line">            temp=a[i];</span><br><span class="line">        	a[i]=a[minIndex];</span><br><span class="line">        	a[minIndex]=temp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="选择排序时间复杂度分析"><a href="#选择排序时间复杂度分析" class="headerlink" title="选择排序时间复杂度分析"></a>选择排序时间复杂度分析</h3><p>​    选择排序的比较操作同冒泡排序一样，都是$N*（N-1）/2$ 次，所以其时间复杂度表示为 $O(N^2)$ ，但其交换操作却比冒泡排序少的多，介于 $0$ 到 $N-1$ 之间，所以选择排序无疑是比冒泡排序快的。</p>
+<h2 id="3-插入排序"><a href="#3-插入排序" class="headerlink" title="3. 插入排序"></a>3. 插入排序</h2><p>​    有一个已经有序的数据序列，要求在这个已经排好的数据序列中插入一个数，但要求插入后此数据序列仍然有序，这个时候就要用到一种新的排序方法——插入排序法。</p>
+<p>​    插入排序还分为直接插入排序、二分插入排序、链表插入排序、希尔排序等等，这里我们只是以直接插入排序讲解。</p>
+<h3 id="插入排序原理"><a href="#插入排序原理" class="headerlink" title="插入排序原理"></a>插入排序原理</h3><p><img src="\postsource\java数据结构与算法\3\insertSort.jpg" alt=""></p>
+<h3 id="Java代码实现：-2"><a href="#Java代码实现：-2" class="headerlink" title="Java代码实现："></a>Java代码实现：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] sort(<span class="keyword">int</span>[] array)&#123;</span><br><span class="line">        <span class="keyword">int</span> j;</span><br><span class="line">        <span class="comment">//从下标为1的元素开始选择合适的位置插入，因为下标为0的只有一个元素，默认是有序的</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span> ; i &lt; array.length ; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> tmp = array[i];<span class="comment">//记录要插入的数据</span></span><br><span class="line">            j = i;</span><br><span class="line">            <span class="keyword">while</span>(j &gt; <span class="number">0</span> &amp;&amp; tmp &lt; array[j-<span class="number">1</span>])&#123;<span class="comment">//从已经排序的序列最右边的开始比较，找到比其小的数</span></span><br><span class="line">                array[j] = array[j-<span class="number">1</span>];<span class="comment">//向后挪动</span></span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">            array[j] = tmp;<span class="comment">//插入有序区</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> array;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="插入排序时间复杂度分析"><a href="#插入排序时间复杂度分析" class="headerlink" title="插入排序时间复杂度分析"></a>插入排序时间复杂度分析</h3><p>​    在第一轮排序中，它最多比较一次，第二轮最多比较两次，一次类推，第N轮，最多比较$N-1$次。因此有 $1+2+3+…+N-1 = N<em>（N-1）/2$ ，所以其时间复杂度表示为 $O(N^2)$ ，但是其不涉及交换操作，在数据基本有序时<del>（比如有序数组中打乱中间的一些元素）</del>，插入排序比其他两种排序方式要快出很多。（在数据基本有序时，其他两种排序方式的比较操作次数可能还是$N</em>（N-1）/2$，而插入排序因为从已排序数组的最右边开始比较，所以比较次数可能接近$N-1$ 次，效率会高出很多）</p>
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4.总结"></a>4.总结</h2><p>​    上面讲的三种排序，冒泡、选择、插入用大 O 表示法都需要 $O(N^2)$ 时间级别。一般不会选择冒泡排序，虽然冒泡排序书写是最简单的，但是平均性能是没有选择排序和插入排序好的。</p>
+<p>　　选择排序把交换次数降低到最低，但是比较次数还是挺大的。当数据量小，并且交换数据相对于比较数据更加耗时的情况下，可以应用选择排序。</p>
+<p>　　在大多数情况下，插入排序是三种算法中最好的选择。</p>
+  	
+					
+	  </div>     
+	  
+
+	
+<div class="post-meta">
+      
+        <i class="iconfont icon-category"></i>       
+        <a class="category-link" href="/categories/Java数据结构与算法学习笔记/">Java数据结构与算法学习笔记</a> 	
+     
+      	
+
+      
+        <i class="iconfont icon-tag"></i>     
+          <a class="tag-link" href="/tags/Java数据结构与算法/">Java数据结构与算法</a> <a class="tag-link" href="/tags/排序算法/">排序算法</a>    
+      	
+</div>
+
+
+
+
+
+<div class="post-footer">
+  <div class="pf-left">
+      <img class="pf-avatar" src="/images/header.jpg">
+      <p class="pf-des">人生如逆旅 我亦是行人</p>
+  </div>
+
+  <div class="pf-right">           
+      <div class="pf-links">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/images/donate1.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img lazyload" src="/images/placeholder.png" alt="No Donate Image!" data-src="/images/donate2.png">	
+	</div>
+
+	<span class="donate-word">世界美好 你也是</span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=21d601593a1de"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		   			             
+            <a class="iconfont  icon-share-qq -mob-share-qq"></a>		
+     	   			             
+            <a class="iconfont  icon-share-weixin -mob-share-weixin"></a>		
+     	   			             
+            <a class="iconfont  icon-share-weibo -mob-share-weibo"></a>		
+     	   			             
+            <a class="iconfont  icon-share-douban -mob-share-douban"></a>		
+     	   			             
+            <a class="iconfont  icon-share-facebook -mob-share-facebook"></a>		
+     	   			             
+            <a class="iconfont  icon-share-twitter -mob-share-twitter"></a>		
+     	   			             
+            <a class="iconfont  icon-share-google -mob-share-google"></a>		
+     	   
+	</div>	
+
+      </div>  
+    <nav class="pf-paginator">
+      
+         
+          <a href="/2018/08/02/java数据结构与算法/Java数据结构与算法学习笔记4—栈/" data-hover="Java数据结构与算法学习笔记——栈">上一篇</a>      
+            
+        
+      
+        
+        <a href="/2018/07/31/java数据结构与算法/Java数据结构与算法学习笔记2—数组/" data-hover="Java数据结构与算法学习笔记二——数组"> 下一篇</a>
+            
+  </nav>   
+  </div>
+</div> 
+	
+
+
+    
+    <div id="disqus_thread"></div>
+
+    <script>
+    (function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://'+'lemonreds'+'.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());    
+    (d.head || d.body).appendChild(s);
+    })();
+    </script>
+
+    <noscript>Please enable JavaScript to view the  <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+
+
+	
+</article>
+
+	<div class="sidebar">
+		<h4 class="toc-title">目录</h4>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-冒泡排序"><span class="toc-text">1. 冒泡排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#冒泡排序算法的原理："><span class="toc-text">冒泡排序算法的原理：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java代码实现："><span class="toc-text">Java代码实现：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#冒泡排序时间复杂度分析"><span class="toc-text">冒泡排序时间复杂度分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-选择排序"><span class="toc-text">2. 选择排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#选择排序原理"><span class="toc-text">选择排序原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java代码实现：-1"><span class="toc-text">Java代码实现：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#选择排序时间复杂度分析"><span class="toc-text">选择排序时间复杂度分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-插入排序"><span class="toc-text">3. 插入排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#插入排序原理"><span class="toc-text">插入排序原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java代码实现：-2"><span class="toc-text">Java代码实现：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#插入排序时间复杂度分析"><span class="toc-text">插入排序时间复杂度分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-总结"><span class="toc-text">4.总结</span></a></li></ol>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">  
+            <span class="search-cancel iconfont icon-cancel"></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+     <div class="mobile-menu">      
+
+      
+      <img class="mobile-menu-icon lazyload" src="/images/placeholder.png" data-src="/images/favicon.ico">   
+      
+
+         
+            
+
+            <a class="mobile-menu-link" href="/">首页
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/archives">归档
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/tags">标签
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/categories">分类
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/about">关于
+            </a>
+            
+         
+                          
+
+            <a class="mobile-menu-link mobile-menu-search" href="#">搜索 </a>                 
+            
+         
+      
+</div>        
+    
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?636802045446222199ae541e32c8133e"; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+
+
+     
+    
+
+
+
+
+<footer id="footer">	    
+
+		
+		<div class="footer-copyright">
+		&copy;
+		
+		2018		
+	
+		roboky
+		<br>
+
+		
+		</div>			
+	 
+</footer>   
+
+  
+
+    <script src="/nayo.bundle.js"></script>           
+  </body>        
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  Java数据结构与算法学习笔记二——数组 |   roboky的个人空间 </title>
+
+ 
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+
+  <link rel="stylesheet" href="/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <header class="header">
+	
+  <nav class="header-nav">        
+   
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-menu">          
+              
+            
+
+              <a class="header-menu-link" id="header-menu-home" href="/">首页</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-archives" href="/archives">归档</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-tags" href="/tags">标签</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-categories" href="/categories">分类</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-about" href="/about">关于</a>     
+
+            
+            
+            
+
+              <a class="iconfont icon-menu-search header-menu-link" id="header-menu-search"></a>
+
+            
+                
+    </div>  
+    
+  </nav>
+</header>   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+
+	<p class="post-title">	
+		Java数据结构与算法学习笔记二——数组
+	</p>
+			
+
+	<div class="meta-info">	
+	<span>
+		7月 31, 2018
+	</span>
+
+	
+	
+		<i class="iconfont icon-words"></i>
+		<span>
+			2723
+		</span>
+	
+</div>
+
+</div> 
+	 
+
+	  <div class="post-content slideDownMin">
+
+		
+
+			
+					<hr>
+<h2 id="1-Java数组介绍"><a href="#1-Java数组介绍" class="headerlink" title="1. Java数组介绍"></a>1. Java数组介绍</h2><p>​    数组对于每一门编程语言来说都是重要的数据结构之一 ，Java中数组是用来存放固定大小的同类型元素。<a id="more"></a></p>
+<h3 id="数组的声明"><a href="#数组的声明" class="headerlink" title="数组的声明"></a>数组的声明</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//声明数组myArray1,声明一个长度为3，只能存放int类型的数据</span></span><br><span class="line"><span class="keyword">int</span> [] myArray1 = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">3</span>];</span><br><span class="line"><span class="comment">//声明数组myArray2,声明一个数组元素为 1,2,3的int类型数组</span></span><br><span class="line"><span class="keyword">int</span> [] myArray2 = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="数组的遍历"><a href="#数组的遍历" class="headerlink" title="数组的遍历"></a>数组的遍历</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> [] array2 = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; array2.length ;i++)&#123;</span><br><span class="line">    System.out.println(array2[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-用类封装数组实现数据结构"><a href="#2-用类封装数组实现数据结构" class="headerlink" title="2. 用类封装数组实现数据结构"></a>2. 用类封装数组实现数据结构</h2><p>​    上一篇文章中我们介绍了一个数据结构必须具有增删改查的基本功能，现在我们用类封装数组，实现以上功能。</p>
+<blockquote>
+<p>假定操作人不会添加重复元素。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> array;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyArray</span> </span>&#123;</span><br><span class="line">    <span class="comment">//定义一个数组</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> [] intArray;</span><br><span class="line">    <span class="comment">//定义数组的实际有效长度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> elems;</span><br><span class="line">    <span class="comment">//定义数组的最大长度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> length;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">//默认构造一个长度为50的数组</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyArray</span><span class="params">()</span></span>&#123;</span><br><span class="line">        elems = <span class="number">0</span>;</span><br><span class="line">        length = <span class="number">50</span>;</span><br><span class="line">        intArray = <span class="keyword">new</span> <span class="keyword">int</span>[length];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//构造函数，初始化一个长度为length 的数组</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyArray</span><span class="params">(<span class="keyword">int</span> length)</span></span>&#123;</span><br><span class="line">        elems = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">this</span>.length = length;</span><br><span class="line">        intArray = <span class="keyword">new</span> <span class="keyword">int</span>[length];</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">//获取数组的有效长度</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> elems;</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 遍历显示元素</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; elems ; i++)&#123;</span><br><span class="line">            System.out.print(intArray[i]+<span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 添加元素</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> value,假设操作人是不会添加重复元素的，如果有重复元素对于后面的操作都会有影响。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 添加成功返回true,添加的元素超过范围了返回false</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> value)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(elems == length)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            intArray[elems] = value;</span><br><span class="line">            elems++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据下标获取元素</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> i 元素下标</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 查找下标值在数组下标有效范围内，返回下标所表示的元素</span></span><br><span class="line"><span class="comment">     * 查找下标超出数组下标有效值，提示访问下标越界</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> i)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&lt;<span class="number">0</span> || i&gt;elems)&#123;</span><br><span class="line">            System.out.println(<span class="string">"访问下标越界"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> intArray[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查找元素</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> searchValue</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>查找的元素如果存在则返回下标值，如果不存在，返回 -1</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> searchValue)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i ;</span><br><span class="line">        <span class="keyword">for</span>(i = <span class="number">0</span> ; i &lt; elems ;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(intArray[i] == searchValue)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(i == elems)&#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 删除元素</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> value</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 如果要删除的值不存在，直接返回 false;否则返回true，删除成功</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">delete</span><span class="params">(<span class="keyword">int</span> value)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> k = find(value);</span><br><span class="line">        <span class="keyword">if</span>(k == -<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(k == elems-<span class="number">1</span>)&#123;</span><br><span class="line">                elems--;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> i = k; i&lt; elems-<span class="number">1</span> ; i++)&#123;</span><br><span class="line">                    intArray[i] = intArray[i+<span class="number">1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                 elems--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 修改数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> oldValue</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> newValue</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 修改成功返回true，修改失败返回false</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">modify</span><span class="params">(<span class="keyword">int</span> oldValue,<span class="keyword">int</span> newValue)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i = find(oldValue);</span><br><span class="line">        <span class="keyword">if</span>(i == -<span class="number">1</span>)&#123;</span><br><span class="line">            System.out.println(<span class="string">"需要修改的数据不存在"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            intArray[i] = newValue;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-数组的局限性"><a href="#3-数组的局限性" class="headerlink" title="3. 数组的局限性"></a>3. 数组的局限性</h2><p>​    通过以上的代码，我们发现数组是能完成一个数据结构的所有功能的，而且实现起来也不难的，那实际工作中为啥很少使用数组进行数据存储呢？</p>
+<p><em>数组局限性分析：</em></p>
+<ul>
+<li>查找慢，我们是根据元素值来查找，给定一个元素值，对于无序数组，我们需要从数组第一个元素开始遍历，直到找到那个元素。 </li>
+<li>删除慢，我们要先遍历找到元素的位置，然后将其后的元素向前移动一位。</li>
+<li>数组一旦创建，大小就固定了，不能动态扩展，浪费内存。</li>
+<li>插入块，队伍无序数组，增加一个元素很简单，就是在末尾添加即可。</li>
+</ul>
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>​    本篇文章我们讲解了数组的基本用法，以及用Java语言中的类实现了一个数组的数据结构，但是我们分析该数据结构，发现存在很多性能问题，后面会讲解别的数据结构，看看那些数据结构是如何处理这些问题的。 </p>
+  	
+					
+	  </div>     
+	  
+
+	
+<div class="post-meta">
+      
+        <i class="iconfont icon-category"></i>       
+        <a class="category-link" href="/categories/Java数据结构与算法学习笔记/">Java数据结构与算法学习笔记</a> 	
+     
+      	
+
+      
+        <i class="iconfont icon-tag"></i>     
+          <a class="tag-link" href="/tags/Java数据结构与算法/">Java数据结构与算法</a> <a class="tag-link" href="/tags/数组/">数组</a>    
+      	
+</div>
+
+
+
+
+
+<div class="post-footer">
+  <div class="pf-left">
+      <img class="pf-avatar" src="/images/header.jpg">
+      <p class="pf-des">人生如逆旅 我亦是行人</p>
+  </div>
+
+  <div class="pf-right">           
+      <div class="pf-links">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/images/donate1.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img" src="/images/donate2.png" alt="No Donate Image!">	
+	</div>
+
+	<span class="donate-word">世界美好 你也是</span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=21d601593a1de"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		   			             
+            <a class="iconfont  icon-share-qq -mob-share-qq"></a>		
+     	   			             
+            <a class="iconfont  icon-share-weixin -mob-share-weixin"></a>		
+     	   			             
+            <a class="iconfont  icon-share-weibo -mob-share-weibo"></a>		
+     	   			             
+            <a class="iconfont  icon-share-douban -mob-share-douban"></a>		
+     	   			             
+            <a class="iconfont  icon-share-facebook -mob-share-facebook"></a>		
+     	   			             
+            <a class="iconfont  icon-share-twitter -mob-share-twitter"></a>		
+     	   			             
+            <a class="iconfont  icon-share-google -mob-share-google"></a>		
+     	   
+	</div>	
+
+      </div>  
+    <nav class="pf-paginator">
+      
+         
+          <a href="/2018/08/01/java数据结构与算法/Java数据结构与算法学习笔记3—排序/" data-hover="Java数据结构与算法学习笔记——排序算法">上一篇</a>      
+            
+        
+      
+        
+        <a href="/2018/07/31/java数据结构与算法/Java数据结构与算法学习笔记1—概述/" data-hover="Java数据结构与算法学习笔记——概述"> 下一篇</a>
+            
+  </nav>   
+  </div>
+</div> 
+	
+
+
+    
+    <div id="disqus_thread"></div>
+
+    <script>
+    (function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://'+'lemonreds'+'.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());    
+    (d.head || d.body).appendChild(s);
+    })();
+    </script>
+
+    <noscript>Please enable JavaScript to view the  <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+
+
+	
+</article>
+
+	<div class="sidebar">
+		<h4 class="toc-title">目录</h4>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Java数组介绍"><span class="toc-text">1. Java数组介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数组的声明"><span class="toc-text">数组的声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组的遍历"><span class="toc-text">数组的遍历</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-用类封装数组实现数据结构"><span class="toc-text">2. 用类封装数组实现数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-数组的局限性"><span class="toc-text">3. 数组的局限性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-总结"><span class="toc-text">4. 总结</span></a></li></ol>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">  
+            <span class="search-cancel iconfont icon-cancel"></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+     <div class="mobile-menu">      
+
+      
+      <img class="mobile-menu-icon" src="/images/favicon.ico">   
+      
+
+         
+            
+
+            <a class="mobile-menu-link" href="/">首页
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/archives">归档
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/tags">标签
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/categories">分类
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/about">关于
+            </a>
+            
+         
+                          
+
+            <a class="mobile-menu-link mobile-menu-search" href="#">搜索 </a>                 
+            
+         
+      
+</div>        
+    
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?636802045446222199ae541e32c8133e"; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+
+
+     
+    
+
+
+
+
+<footer id="footer">	    
+
+		
+		<div class="footer-copyright">
+		&copy;
+		
+		2018		
+	
+		roboky
+		<br>
+
+		
+		</div>			
+	 
+</footer>   
+
+  
+
+    <script src="/nayo.bundle.js"></script>           
+  </body>        
+</html>
