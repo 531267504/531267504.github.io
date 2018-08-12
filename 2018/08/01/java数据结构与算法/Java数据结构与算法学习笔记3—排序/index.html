@@ -90,7 +90,7 @@
 	
 		<i class="iconfont icon-words"></i>
 		<span>
-			2529
+			2544
 		</span>
 	
 </div>
@@ -126,8 +126,8 @@
 <h2 id="3-插入排序"><a href="#3-插入排序" class="headerlink" title="3. 插入排序"></a>3. 插入排序</h2><p>​    有一个已经有序的数据序列，要求在这个已经排好的数据序列中插入一个数，但要求插入后此数据序列仍然有序，这个时候就要用到一种新的排序方法——插入排序法。</p>
 <p>​    插入排序还分为直接插入排序、二分插入排序、链表插入排序、希尔排序等等，这里我们只是以直接插入排序讲解。</p>
 <h3 id="插入排序原理"><a href="#插入排序原理" class="headerlink" title="插入排序原理"></a>插入排序原理</h3><p><img src="\postsource\java数据结构与算法\3\insertSort.jpg" alt=""></p>
-<h3 id="Java代码实现：-2"><a href="#Java代码实现：-2" class="headerlink" title="Java代码实现："></a>Java代码实现：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] sort(<span class="keyword">int</span>[] array)&#123;</span><br><span class="line">        <span class="keyword">int</span> j;</span><br><span class="line">        <span class="comment">//从下标为1的元素开始选择合适的位置插入，因为下标为0的只有一个元素，默认是有序的</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span> ; i &lt; array.length ; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> tmp = array[i];<span class="comment">//记录要插入的数据</span></span><br><span class="line">            j = i;</span><br><span class="line">            <span class="keyword">while</span>(j &gt; <span class="number">0</span> &amp;&amp; tmp &lt; array[j-<span class="number">1</span>])&#123;<span class="comment">//从已经排序的序列最右边的开始比较，找到比其小的数</span></span><br><span class="line">                array[j] = array[j-<span class="number">1</span>];<span class="comment">//向后挪动</span></span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">            array[j] = tmp;<span class="comment">//插入有序区</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> array;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="插入排序时间复杂度分析"><a href="#插入排序时间复杂度分析" class="headerlink" title="插入排序时间复杂度分析"></a>插入排序时间复杂度分析</h3><p>​    在第一轮排序中，它最多比较一次，第二轮最多比较两次，一次类推，第N轮，最多比较$N-1$次。因此有 $1+2+3+…+N-1 = N<em>（N-1）/2$ ，所以其时间复杂度表示为 $O(N^2)$ ，但是其不涉及交换操作，在数据基本有序时<del>（比如有序数组中打乱中间的一些元素）</del>，插入排序比其他两种排序方式要快出很多。（在数据基本有序时，其他两种排序方式的比较操作次数可能还是$N</em>（N-1）/2$，而插入排序因为从已排序数组的最右边开始比较，所以比较次数可能接近$N-1$ 次，效率会高出很多）</p>
+<h3 id="Java代码实现：-2"><a href="#Java代码实现：-2" class="headerlink" title="Java代码实现："></a>Java代码实现：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] sort(<span class="keyword">int</span>[] array)&#123;</span><br><span class="line">        <span class="keyword">int</span> j;</span><br><span class="line">        <span class="comment">//从下标为1的元素开始选择合适的位置插入，因为下标为0的只有一个元素，默认是有序的</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span> ; i &lt; array.length ; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> tmp = array[i];<span class="comment">//记录要插入的数据</span></span><br><span class="line">            j = i;</span><br><span class="line">            <span class="keyword">while</span>(j &gt; <span class="number">0</span> &amp;&amp; tmp &lt; array[j-<span class="number">1</span>])&#123;<span class="comment">//从已经排序的序列最右边的开始比较，找到比其小的数，当大于有序区某数时不再循环。</span></span><br><span class="line">                array[j] = array[j-<span class="number">1</span>];<span class="comment">//向后挪动</span></span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">            array[j] = tmp;<span class="comment">//插入有序区</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> array;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="插入排序时间复杂度分析"><a href="#插入排序时间复杂度分析" class="headerlink" title="插入排序时间复杂度分析"></a>插入排序时间复杂度分析</h3><p>​    在第一轮排序中，它最多比较一次，第二轮最多比较两次，依此类推，第N轮，最多比较$N-1$次。因此有 $1+2+3+…+N-1 = N<em>（N-1）/2$ ，所以其时间复杂度表示为 $O(N^2)$ ，但是其不涉及交换操作，在数据基本有序时<del>（比如有序数组中打乱中间的一些元素）</del>，插入排序比其他两种排序方式要快出很多。（在数据基本有序时，其他两种排序方式的比较操作次数可能还是$N</em>（N-1）/2$，而插入排序因为从已排序数组的最右边开始比较，所以比较次数可能接近$N-1$ 次，效率会高出很多）</p>
 <h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4.总结"></a>4.总结</h2><p>​    上面讲的三种排序，冒泡、选择、插入用大 O 表示法都需要 $O(N^2)$ 时间级别。一般不会选择冒泡排序，虽然冒泡排序书写是最简单的，但是平均性能是没有选择排序和插入排序好的。</p>
 <p>　　选择排序把交换次数降低到最低，但是比较次数还是挺大的。当数据量小，并且交换数据相对于比较数据更加耗时的情况下，可以应用选择排序。</p>
 <p>　　在大多数情况下，插入排序是三种算法中最好的选择。</p>
@@ -323,19 +323,6 @@
       
 </div>        
     
-
-
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?636802045446222199ae541e32c8133e"; 
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-
-
 
 
 

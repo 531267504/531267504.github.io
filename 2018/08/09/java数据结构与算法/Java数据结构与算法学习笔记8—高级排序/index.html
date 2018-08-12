@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  Java数据结构与算法学习笔记——高级排序 |   roboky的个人空间 </title>
+
+ 
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+
+  <link rel="stylesheet" href="/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <header class="header">
+	
+  <nav class="header-nav">        
+   
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-menu">          
+              
+            
+
+              <a class="header-menu-link" id="header-menu-home" href="/">首页</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-archives" href="/archives">归档</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-tags" href="/tags">标签</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-categories" href="/categories">分类</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-about" href="/about">关于</a>     
+
+            
+            
+            
+
+              <a class="iconfont icon-menu-search header-menu-link" id="header-menu-search"></a>
+
+            
+                
+    </div>  
+    
+  </nav>
+</header>   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+
+	<p class="post-title">	
+		Java数据结构与算法学习笔记——高级排序
+	</p>
+			
+
+	<div class="meta-info">	
+	<span>
+		8月 09, 2018
+	</span>
+
+	
+	
+		<i class="iconfont icon-words"></i>
+		<span>
+			3802
+		</span>
+	
+</div>
+
+</div> 
+	 
+
+	  <div class="post-content slideDownMin">
+
+		
+
+			
+					<hr>
+<p>​    在中我们介绍了三种简单的排序算法，它们的时间复杂度大O表示法都是O(N2)，如果数据量少，我们还能忍受，但是数据量大，那么这三种简单的排序所需要的时间则是我们所不能接受的。接着我们在讲解递归的时候，介绍了归并排序，归并排序需要O(NlogN)，这比简单排序要快了很多，但是归并排序有个缺点，它需要的空间是原始数组空间的两倍，当我们需要排序的数据占据了整个内存的一半以上的空间，那么是不能使用归并排序的。</p>
+<p>​    本次我们介绍几种高级的排序算法：希尔排序和快速排序。<a id="more"></a></p>
+<h2 id="1-希尔排序"><a href="#1-希尔排序" class="headerlink" title="1. 希尔排序"></a>1. 希尔排序</h2><p>​    <strong>希尔排序</strong>(Shell’s Sort)是插入排序的一种又称“缩小增量排序”（Diminishing Increment Sort），是直接插入排序算法的一种更高效的改进版本。</p>
+<p>​    之前学习插入排序排序的我们说过，在数据基本有序时，插入排序的效率很高，所以引入希尔排序，把要排序的记录按一定的间隔gap分组，对每组记录都按照插入排序进行排序。之后间隔逐步减小并且最后减小为1，最后一趟排序即为基本的插入排序。<img src="\postsource\java数据结构与算法\8\1.png" alt=""></p>
+<p>​    分析希尔排序为何比是插入排序的升级版：当间隔很大时，每一趟排序需要对比的元素个数很少，当间隔减小时，此时需要移动的数据增多，但每一项元素已接近他们排序后的最终位置，也就是数据已基本有序。正是这两种情况的结合才使希尔排序效率比插入排序高很多 。</p>
+<p><strong>间隔序列的选择</strong></p>
+<p>​    增量序列是影响希尔排序性能的重要因素，任何最终步长为1的序列都可以作为希尔排序的间隔序列。希尔最初建议选择N/2为间隔，但在后来被证明效率很低。已知的最好步长序列是由Sedgewick提出的(1, 5, 19, 41, 109,…) 。</p>
+<p>​    我们使用一种很常用的间隔序列来实现希尔排序：<strong>knuth 间隔序列 3h+1(1,4,13,40,…)</strong> </p>
+<p><img src="\postsource\java数据结构与算法\8\2.png" alt=""></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">shellKnuthSort</span><span class="params">(<span class="keyword">int</span>[] array)</span></span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"原数组为"</span>+Arrays.toString(array));</span><br><span class="line">    <span class="keyword">int</span> step = <span class="number">1</span> ;</span><br><span class="line">    <span class="keyword">int</span> len = array.length;</span><br><span class="line">    <span class="keyword">while</span>(step &lt;= len/<span class="number">3</span>)&#123;</span><br><span class="line">        step = step*<span class="number">3</span> + <span class="number">1</span>;<span class="comment">//1,4,13,40......</span></span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">while</span>(step &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">//分别对每个增量间隔进行排序</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = step ; i &lt; len ; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> temp = array[i];</span><br><span class="line">            <span class="keyword">int</span> j = i;</span><br><span class="line">            <span class="keyword">while</span>(j &gt; step-<span class="number">1</span> &amp;&amp; temp &lt;= array[j-step])&#123;</span><br><span class="line">                array[j] = array[j-step];</span><br><span class="line">                j -= step;</span><br><span class="line">            &#125;</span><br><span class="line">            array[j] = temp;</span><br><span class="line">        &#125;<span class="comment">//end for</span></span><br><span class="line">        System.out.println(<span class="string">"间隔为"</span>+step+<span class="string">"的排序结果为"</span>+Arrays.toString(array));</span><br><span class="line">        step = (step-<span class="number">1</span>)/<span class="number">3</span>;</span><br><span class="line">    &#125;<span class="comment">//end while(step&gt;0)</span></span><br><span class="line">         </span><br><span class="line">    System.out.println(<span class="string">"最终排序："</span>+Arrays.toString(array));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-快速排序"><a href="#2-快速排序" class="headerlink" title="2. 快速排序"></a>2. 快速排序</h2><p>​    <strong>快速排序</strong>（Quicksort）是对冒泡排序的一种改进。 由C. A. R. Hoare在1962年提出。它的基本思想是：通过一趟排序将要排序的数据分割成独立的两部分，其中一部分的所有数据都比另外一部分的所有数据都要小，然后再按此方法对这两部分数据分别进行快速排序，整个排序过程可以递归进行，以此达到整个数据变成有序序列。</p>
+<p><strong>快速排序基本思路：</strong></p>
+<p>​    比如排序[6  1  2 7  9  3  4  5 10  8 ]，我们选一个数作为<strong>基准数</strong>(<em>原则上随机选取，但是我们一般选取数组中第一个元素作为基准元素</em>)，我们这里选择6为基准数，接下来，将这个数组中所有比6大的数放在6的右边，比6小的数放在左边，经过第一轮后数组变为下面这样：</p>
+<p>​    [ 3  1  2 5  4  <strong><u>6</u></strong>  9 7  10  8 ]</p>
+<p>​    我们只要取基准元素左右两部分[3 1 2 5 4]和[9 7 10 8]再递归下去，直至对每个元素都完成排序即可。图示如下：</p>
+<p><img src="\postsource\java数据结构与算法\8\3.jpg" alt=""></p>
+<p>​    我们对上图数组进行快速排序，选取6作为基准数。我们假定有两个游标，小兵i和小兵j，小兵j向左扫描，直到<strong>遇到一个小于基准元素的数</strong>，在那个位置停下；小兵i向右扫描，直到<strong>遇到一个大于基准元素的数</strong>，在那个位置停下。</p>
+<p>​    因为我们选取了左侧为基准数，所以需要让最右边的数，也就是小兵j先开始出动（关于为何必须j先移动下面有解释）。</p>
+<p><img src="\postsource\java数据结构与算法\8\4.jpg" alt=""></p>
+<p>​    现在小兵i停在7上，j停在5上，现在交换小兵i和小兵j所指向的元素的值。交换后的序列如下：</p>
+<p><img src="\postsource\java数据结构与算法\8\5.jpg" alt=""></p>
+<p>​    接着，j继续向左移动，在数字4上停下；i继续向右移动，在数字9上停下，然后再次交换。</p>
+<p><img src="/images/placeholder.png" alt="" data-src="\postsource\java数据结构与算法\8\6.jpg" class="lazyload"></p>
+<p><img src="/images/placeholder.png" alt="" data-src="\postsource\java数据结构与算法\8\7.jpg" class="lazyload"></p>
+<p>​    第二次交换结束后，小兵j继续向左移动，在数字3上停下；小兵i继续向右移动，当他和j相遇时，说明此次探测结束，将数字3和基准数字6交换（如果此时i先移动，会在数字9上相遇，把9这个大于6的数换到右边）。</p>
+<p><img src="/images/placeholder.png" alt="" data-src="\postsource\java数据结构与算法\8\8.jpg" class="lazyload"></p>
+<p><img src="/images/placeholder.png" alt="" data-src="\postsource\java数据结构与算法\8\9.jpg" class="lazyload"></p>
+<p><img src="/images/placeholder.png" alt="" data-src="\postsource\java数据结构与算法\8\10.jpg" class="lazyload"></p>
+<p>​    到此第一轮“探测”真正结束。此时以基准数6为分界点，6左边的数都小于等于6，6右边的数都大于等于6。 接着对分隔后的数组重复上面的操作，直至排序完全结束。下面用一张图来描述上面的整个过程：</p>
+<p><img src="/images/placeholder.png" alt="" data-src="\postsource\java数据结构与算法\8\11.jpg" class="lazyload"></p>
+<p>完整代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> array;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuickSort</span> </span>&#123;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">//数组array中下标为i和j位置的元素进行交换</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] array , <span class="keyword">int</span> i , <span class="keyword">int</span> j)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> temp = array[i];</span><br><span class="line">        array[i] = array[j];</span><br><span class="line">        array[j] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">recQuickSort</span><span class="params">(<span class="keyword">int</span>[] array,<span class="keyword">int</span> left,<span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(right &lt;= left)&#123;</span><br><span class="line">            <span class="keyword">return</span>;<span class="comment">//终止递归</span></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">int</span> partition = partitionIt(array,left,right);</span><br><span class="line">            recQuickSort(array,left,partition-<span class="number">1</span>);<span class="comment">// 对上一轮排序(切分)时，基准元素左边的子数组进行递归</span></span><br><span class="line">            recQuickSort(array,partition+<span class="number">1</span>,right);<span class="comment">// 对上一轮排序(切分)时，基准元素右边的子数组进行递归</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partitionIt</span><span class="params">(<span class="keyword">int</span>[] array,<span class="keyword">int</span> left,<span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">        <span class="comment">//为什么 j加一个1，而i没有加1,是因为下面的循环判断是从--j和++i开始的.</span></span><br><span class="line">        <span class="comment">//而基准元素选的array[left],即第一个元素，所以左游标从第二个元素开始比较</span></span><br><span class="line">        <span class="keyword">int</span> i = left;</span><br><span class="line">        <span class="keyword">int</span> j = right+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> pivot = array[left];<span class="comment">// pivot 为选取的基准元素（头元素）</span></span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">            <span class="comment">//当选取左侧为基准时，必需先从右侧游标开始移动。</span></span><br><span class="line">            <span class="keyword">while</span>(j &gt; <span class="number">0</span> &amp;&amp; array[--j] &gt; pivot &amp;&amp;i&lt;j)&#123;&#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span>(i&lt;right &amp;&amp; array[++i] &lt; pivot &amp;&amp;i&lt;j)&#123;&#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//也可以删除i&lt;j这个条件，这样就不必在意从哪边先开始，最后与基准换的不一定是交点而一定是j所处的位置</span></span><br><span class="line">            <span class="comment">//while(j &gt; 0 &amp;&amp; array[--j] &gt; pivot )&#123;&#125;</span></span><br><span class="line">            <span class="comment">//while(i&lt;right &amp;&amp; array[++i] &lt; pivot )&#123;&#125;</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(i &gt;= j)&#123;<span class="comment">// 左右游标相遇时候停止。或者i已经大于了j，两者已经交叉过去。</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                swap(array, i, j);<span class="comment">// 左右游标未相遇时停止, 交换各自所指元素，循环继续</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        swap(array, left, j);<span class="comment">//基准元素和游标相遇时所指元素交换，为最后一次交换</span></span><br><span class="line">        <span class="keyword">return</span> j;<span class="comment">// 一趟排序完成， 返回基准元素位置(注意这里基准元素已经交换位置了)</span></span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] array)</span></span>&#123;</span><br><span class="line">        recQuickSort(array, <span class="number">0</span>, array.length-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">//测试</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] array = &#123;<span class="number">6</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">7</span>,<span class="number">9</span>,<span class="number">7</span>,<span class="number">6</span>&#125;;</span><br><span class="line">        sort(array);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i : array)&#123;</span><br><span class="line">            System.out.print(i+<span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//打印结果为：1 2 6 6 7 7 9</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  	
+					
+	  </div>     
+	  
+
+	
+<div class="post-meta">
+      
+        <i class="iconfont icon-category"></i>       
+        <a class="category-link" href="/categories/Java数据结构与算法学习笔记/">Java数据结构与算法学习笔记</a> 	
+     
+      	
+
+      
+        <i class="iconfont icon-tag"></i>     
+          <a class="tag-link" href="/tags/Java数据结构与算法/">Java数据结构与算法</a> <a class="tag-link" href="/tags/排序算法/">排序算法</a>    
+      	
+</div>
+
+
+
+
+
+<div class="post-footer">
+  <div class="pf-left">
+      <img class="pf-avatar lazyload" src="/images/placeholder.png" data-src="/images/header.jpg">
+      <p class="pf-des">人生如逆旅 我亦是行人</p>
+  </div>
+
+  <div class="pf-right">           
+      <div class="pf-links">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img lazyload" src="/images/placeholder.png" alt="No Donate Image!" data-src="/images/donate1.png">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img lazyload" src="/images/placeholder.png" alt="No Donate Image!" data-src="/images/donate2.png">	
+	</div>
+
+	<span class="donate-word">世界美好 你也是</span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=21d601593a1de"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		   			             
+            <a class="iconfont  icon-share-qq -mob-share-qq"></a>		
+     	   			             
+            <a class="iconfont  icon-share-weixin -mob-share-weixin"></a>		
+     	   			             
+            <a class="iconfont  icon-share-weibo -mob-share-weibo"></a>		
+     	   			             
+            <a class="iconfont  icon-share-douban -mob-share-douban"></a>		
+     	   			             
+            <a class="iconfont  icon-share-facebook -mob-share-facebook"></a>		
+     	   			             
+            <a class="iconfont  icon-share-twitter -mob-share-twitter"></a>		
+     	   			             
+            <a class="iconfont  icon-share-google -mob-share-google"></a>		
+     	   
+	</div>	
+
+      </div>  
+    <nav class="pf-paginator">
+      
+         
+          <a href="/2018/08/10/java数据结构与算法/Java数据结构与算法学习笔记9—二叉树/" data-hover="Java数据结构与算法学习笔记——二叉树">上一篇</a>      
+            
+        
+      
+        
+        <a href="/2018/08/08/java数据结构与算法/Java数据结构与算法学习笔记7—递归/" data-hover="Java数据结构与算法学习笔记——递归"> 下一篇</a>
+            
+  </nav>   
+  </div>
+</div> 
+	
+
+
+    
+    <div id="disqus_thread"></div>
+
+    <script>
+    (function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://'+'lemonreds'+'.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());    
+    (d.head || d.body).appendChild(s);
+    })();
+    </script>
+
+    <noscript>Please enable JavaScript to view the  <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+
+
+	
+</article>
+
+	<div class="sidebar">
+		<h4 class="toc-title">目录</h4>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-希尔排序"><span class="toc-text">1. 希尔排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-快速排序"><span class="toc-text">2. 快速排序</span></a></li></ol>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">  
+            <span class="search-cancel iconfont icon-cancel"></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+     <div class="mobile-menu">      
+
+      
+      <img class="mobile-menu-icon lazyload" src="/images/placeholder.png" data-src="/images/favicon.ico">   
+      
+
+         
+            
+
+            <a class="mobile-menu-link" href="/">首页
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/archives">归档
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/tags">标签
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/categories">分类
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/about">关于
+            </a>
+            
+         
+                          
+
+            <a class="mobile-menu-link mobile-menu-search" href="#">搜索 </a>                 
+            
+         
+      
+</div>        
+    
+
+
+
+     
+    
+
+
+
+
+<footer id="footer">	    
+
+		
+		<div class="footer-copyright">
+		&copy;
+		
+		2018		
+	
+		roboky
+		<br>
+
+		
+		</div>			
+	 
+</footer>   
+
+  
+
+    <script src="/nayo.bundle.js"></script>           
+  </body>        
+</html>
