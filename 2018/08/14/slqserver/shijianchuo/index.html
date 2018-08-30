@@ -1,0 +1,325 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  SQL Server中使用时间戳分批 |   roboky的个人空间 </title>
+
+ 
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+
+  <link rel="stylesheet" href="/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <header class="header">
+	
+  <nav class="header-nav">        
+   
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-menu">          
+              
+            
+
+              <a class="header-menu-link" id="header-menu-home" href="/">首页</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-archives" href="/archives">归档</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-tags" href="/tags">标签</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-categories" href="/categories">分类</a>     
+
+            
+            
+            
+
+              <a class="header-menu-link" id="header-menu-about" href="/about">关于</a>     
+
+            
+            
+            
+
+              <a class="iconfont icon-menu-search header-menu-link" id="header-menu-search"></a>
+
+            
+                
+    </div>  
+    
+  </nav>
+</header>   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+
+	<p class="post-title">	
+		SQL server中使用时间戳分批
+	</p>
+			
+
+	<div class="meta-info">	
+	<span>
+		8月 14, 2018
+	</span>
+
+	
+	
+		<i class="iconfont icon-words"></i>
+		<span>
+			5993
+		</span>
+	
+</div>
+
+</div> 
+	 
+
+	  <div class="post-content slideDownMin">
+
+		
+
+			
+					<p>​    最近在做一个学生密码的筛查功能，要筛查所有学生的密码，判断有弱密码的学生存放到筛查结果表里。因为学生用户量实在太大，而筛查学生密码必须得一条一条用正则判断，实在是慢，不可能让老师点一下等五分钟再出结果，所以想到分批筛查，就采用给学生密码表加一个时间戳来判断筛查批次的方法，每点一次筛查500条，所有学生全部筛查完后给一个提示。</p>
+<p>​    第一次做，就把主要的数据库存储过程放到下面做个备份：<a id="more"></a></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> [dbo].[sp_userPassTimes]</span><br><span class="line">@usertypeid <span class="built_in">INT</span>,</span><br><span class="line">@counts <span class="built_in">INT</span> <span class="keyword">OUTPUT</span>,  <span class="comment">--还剩多少条没筛查</span></span><br><span class="line">@sum2 <span class="built_in">INT</span> <span class="keyword">OUTPUT</span>	<span class="comment">--本次筛查了多少条</span></span><br><span class="line"><span class="keyword">AS</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">DECLARE</span> @a <span class="built_in">INT</span>  <span class="comment">--学生总数</span></span><br><span class="line">	<span class="keyword">DECLARE</span> @b <span class="built_in">INT</span>  <span class="comment">--已筛查过的</span></span><br><span class="line">	<span class="keyword">DECLARE</span> @c <span class="built_in">INT</span> <span class="comment">--有没有未用完时间戳</span></span><br><span class="line">	<span class="keyword">DECLARE</span> @datetime <span class="built_in">INT</span></span><br><span class="line">	<span class="keyword">DECLARE</span> @datetime2 <span class="built_in">INT</span></span><br><span class="line">	<span class="keyword">DECLARE</span> @screened <span class="built_in">INT</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">DECLARE</span> @<span class="keyword">id</span> <span class="built_in">VARCHAR</span>(<span class="number">50</span>)</span><br><span class="line">	<span class="keyword">DECLARE</span> @pwd <span class="built_in">VARCHAR</span>(<span class="number">50</span>)</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">	<span class="keyword">SELECT</span> @a=<span class="keyword">COUNT</span>(<span class="number">1</span>) <span class="keyword">from</span> student.dbo.UserPassWordSys   <span class="comment">--学生密码表</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">SELECT</span> @c=<span class="keyword">COUNT</span>(<span class="number">1</span>) <span class="keyword">FROM</span> student.dbo.UserPassWord_times <span class="keyword">WHERE</span> state = <span class="number">0</span>  <span class="comment">--此表为存放时间戳表 state=0为还没用完</span></span><br><span class="line">	<span class="keyword">IF</span> @c=<span class="number">0</span> <span class="keyword">BEGIN</span>  <span class="comment">--没有可用的时间戳了，生成一个</span></span><br><span class="line">		<span class="keyword">SELECT</span> @datetime = <span class="keyword">DATEDIFF</span>(S,<span class="string">'1970-01-01 00:00:00'</span>, <span class="keyword">GETDATE</span>()) - <span class="number">8</span> * <span class="number">3600</span></span><br><span class="line">		<span class="keyword">INSERT</span> <span class="keyword">INTO</span> student.dbo.UserPassWord_times <span class="keyword">VALUES</span> (@datetime,<span class="number">0</span>) </span><br><span class="line">	<span class="keyword">END</span></span><br><span class="line">	<span class="keyword">ELSE</span> <span class="keyword">BEGIN</span></span><br><span class="line">		<span class="keyword">SELECT</span> @datetime = times <span class="keyword">FROM</span> student.dbo.UserPassWord_times <span class="keyword">WHERE</span> state = <span class="number">0</span></span><br><span class="line">	<span class="keyword">END</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">SELECT</span> @b=<span class="keyword">COUNT</span>(<span class="number">1</span>) <span class="keyword">FROM</span> student.dbo.UserPassWordSys <span class="keyword">WHERE</span> times=@datetime</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">IF</span> @b&lt;@a <span class="keyword">BEGIN</span></span><br><span class="line">		<span class="comment">--开始正常流程------11</span></span><br><span class="line">		<span class="keyword">set</span> @sum2 = <span class="number">0</span></span><br><span class="line">		<span class="keyword">DECLARE</span> pwCursor <span class="keyword">CURSOR</span> <span class="keyword">FOR</span> <span class="keyword">SELECT</span> TOP <span class="number">500</span> UserID,UserPassword <span class="keyword">FROM</span> student.dbo.UserPassWordSys <span class="keyword">WHERE</span> times &lt;&gt; @datetime <span class="keyword">or</span> times <span class="keyword">is</span> <span class="literal">null</span></span><br><span class="line">		<span class="keyword">OPEN</span> pwCursor </span><br><span class="line">		<span class="keyword">FETCH</span> <span class="keyword">NEXT</span> <span class="keyword">from</span> pwCursor <span class="keyword">into</span> @<span class="keyword">id</span>,@pwd</span><br><span class="line">		<span class="keyword">while</span> @@fetch_status=<span class="number">0</span> </span><br><span class="line">		<span class="keyword">BEGIN</span></span><br><span class="line">			<span class="keyword">UPDATE</span> student.dbo.UserPassWordSys <span class="keyword">SET</span> times = @datetime <span class="keyword">WHERE</span> UserID =@<span class="keyword">id</span></span><br><span class="line">			<span class="keyword">set</span> @sum2 = @sum2+<span class="number">1</span></span><br><span class="line">			<span class="comment">--判断pwd是否为弱密码 是的话关联查插入筛查表</span></span><br><span class="line">			<span class="keyword">IF</span> <span class="keyword">EXISTS</span> (<span class="keyword">SELECT</span> w.WEAKPASS <span class="keyword">FROM</span> student.dbo.tb_b_WeakPassword w <span class="keyword">WHERE</span> w.WEAKPASS=@pwd) <span class="keyword">BEGIN</span></span><br><span class="line">				<span class="keyword">INSERT</span> <span class="keyword">INTO</span> student.dbo.tb_b_ScreenResult(userTypeId,userId,<span class="keyword">password</span>,<span class="keyword">name</span>,screenTime,tel) </span><br><span class="line">				<span class="keyword">select</span> @usertypeid,u.UserID,u.UserPassword,r.studentname,<span class="keyword">GETDATE</span>(),r.Mobile <span class="keyword">from</span> student.dbo.UserPassWordSys u,student.dbo.stusignsys r <span class="keyword">WHERE</span> u.UserID=@<span class="keyword">id</span> <span class="keyword">AND</span> u.UserID=r.SignUserid </span><br><span class="line">			<span class="keyword">END</span></span><br><span class="line">			<span class="keyword">ELSE</span> <span class="keyword">BEGIN</span></span><br><span class="line">				<span class="keyword">IF</span> student.dbo.RegExpTest(@pwd,<span class="string">'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]&#123;8,&#125;$'</span>,<span class="number">0</span>)=<span class="number">0</span>  <span class="keyword">BEGIN</span></span><br><span class="line">					<span class="keyword">INSERT</span> <span class="keyword">INTO</span> student.dbo.tb_b_ScreenResult(userTypeId,userId,<span class="keyword">password</span>,<span class="keyword">name</span>,screenTime,tel) </span><br><span class="line">					<span class="keyword">select</span> @usertypeid,u.UserID,u.UserPassword,r.studentname,<span class="keyword">GETDATE</span>(),r.Mobile <span class="keyword">from</span> student.dbo.UserPassWordSys u,student.dbo.stusignsys r <span class="keyword">WHERE</span> u.UserID=@<span class="keyword">id</span> <span class="keyword">AND</span> u.UserID=r.SignUserid </span><br><span class="line">				<span class="keyword">END</span></span><br><span class="line">			<span class="keyword">END</span></span><br><span class="line">			<span class="keyword">FETCH</span> <span class="keyword">NEXT</span> <span class="keyword">from</span> pwCursor <span class="keyword">into</span> @<span class="keyword">id</span>,@pwd</span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">close</span> pwCursor </span><br><span class="line">		<span class="keyword">deallocate</span> pwCursor</span><br><span class="line">		<span class="comment">--------------------11</span></span><br><span class="line">		<span class="keyword">SELECT</span> @screened=<span class="keyword">COUNT</span>(<span class="number">1</span>) <span class="keyword">FROM</span> student.dbo.UserPassWordSys <span class="keyword">WHERE</span> times=@datetime</span><br><span class="line">	<span class="keyword">END</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">ELSE</span> <span class="keyword">BEGIN</span></span><br><span class="line">	<span class="comment">--旧的时间戳已经用完，更新并获取新时间戳</span></span><br><span class="line">		<span class="keyword">UPDATE</span> student.dbo.UserPassWord_times <span class="keyword">SET</span> state=<span class="number">1</span> <span class="keyword">WHERE</span> times=@datetime</span><br><span class="line">		<span class="keyword">SELECT</span> @datetime2 = <span class="keyword">DATEDIFF</span>(S,<span class="string">'1970-01-01 00:00:00'</span>, <span class="keyword">GETDATE</span>()) - <span class="number">8</span> * <span class="number">3600</span></span><br><span class="line">		<span class="keyword">INSERT</span> <span class="keyword">INTO</span> student.dbo.UserPassWord_times <span class="keyword">VALUES</span> (@datetime2,<span class="number">0</span>) </span><br><span class="line">		<span class="keyword">DELETE</span> <span class="keyword">FROM</span> student.dbo.tb_b_ScreenResult <span class="keyword">WHERE</span> userTypeId = @usertypeid</span><br><span class="line">		<span class="comment">-----------2</span></span><br><span class="line">		<span class="keyword">set</span> @sum2 = <span class="number">0</span></span><br><span class="line">		<span class="keyword">DECLARE</span> pwCursor <span class="keyword">CURSOR</span> <span class="keyword">FOR</span> <span class="keyword">SELECT</span> TOP <span class="number">500</span> UserID,UserPassword <span class="keyword">FROM</span> student.dbo.UserPassWordSys <span class="keyword">WHERE</span> times &lt;&gt; @datetime2 <span class="keyword">or</span> times <span class="keyword">is</span> <span class="literal">null</span></span><br><span class="line">		<span class="keyword">OPEN</span> pwCursor </span><br><span class="line">		<span class="keyword">FETCH</span> <span class="keyword">NEXT</span> <span class="keyword">from</span> pwCursor <span class="keyword">into</span> @<span class="keyword">id</span>,@pwd</span><br><span class="line">		<span class="keyword">while</span> @@fetch_status=<span class="number">0</span> </span><br><span class="line">		<span class="keyword">BEGIN</span></span><br><span class="line">			</span><br><span class="line">			<span class="keyword">UPDATE</span> student.dbo.UserPassWordSys <span class="keyword">SET</span> times = @datetime2 <span class="keyword">WHERE</span> UserID =@<span class="keyword">id</span></span><br><span class="line">			<span class="keyword">set</span> @sum2 = @sum2+<span class="number">1</span></span><br><span class="line">			<span class="comment">--判断pwd是否为弱密码 是的话关联查插入筛查表</span></span><br><span class="line">			<span class="keyword">IF</span> <span class="keyword">EXISTS</span> (<span class="keyword">SELECT</span> w.WEAKPASS <span class="keyword">FROM</span> student.dbo.tb_b_WeakPassword w <span class="keyword">WHERE</span> w.WEAKPASS=@pwd) <span class="keyword">BEGIN</span></span><br><span class="line">				<span class="keyword">INSERT</span> <span class="keyword">INTO</span> student.dbo.tb_b_ScreenResult(userTypeId,userId,<span class="keyword">password</span>,<span class="keyword">name</span>,screenTime,tel) </span><br><span class="line">				<span class="keyword">select</span> @usertypeid,u.UserID,u.UserPassword,r.studentname,<span class="keyword">GETDATE</span>(),r.Mobile <span class="keyword">from</span> student.dbo.UserPassWordSys u,student.dbo.stusignsys r <span class="keyword">WHERE</span> u.UserID=@<span class="keyword">id</span> <span class="keyword">AND</span> u.UserID=r.SignUserid </span><br><span class="line">			<span class="keyword">END</span></span><br><span class="line">			<span class="keyword">ELSE</span> <span class="keyword">BEGIN</span></span><br><span class="line">				<span class="keyword">IF</span> student.dbo.RegExpTest(@pwd,<span class="string">'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]&#123;8,&#125;$'</span>,<span class="number">0</span>)=<span class="number">0</span>  <span class="keyword">BEGIN</span></span><br><span class="line">					<span class="keyword">INSERT</span> <span class="keyword">INTO</span> student.dbo.tb_b_ScreenResult(userTypeId,userId,<span class="keyword">password</span>,<span class="keyword">name</span>,screenTime,tel) </span><br><span class="line">					<span class="keyword">select</span> @usertypeid,u.UserID,u.UserPassword,r.studentname,<span class="keyword">GETDATE</span>(),r.Mobile <span class="keyword">from</span> student.dbo.UserPassWordSys u,student.dbo.stusignsys r <span class="keyword">WHERE</span> u.UserID=@<span class="keyword">id</span> <span class="keyword">AND</span> u.UserID=r.SignUserid </span><br><span class="line">				<span class="keyword">END</span></span><br><span class="line">			<span class="keyword">END</span></span><br><span class="line">			<span class="keyword">FETCH</span> <span class="keyword">NEXT</span> <span class="keyword">from</span> pwCursor <span class="keyword">into</span> @<span class="keyword">id</span>,@pwd</span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">close</span> pwCursor </span><br><span class="line">		<span class="keyword">deallocate</span> pwCursor</span><br><span class="line">		<span class="comment">----------------2</span></span><br><span class="line">		<span class="keyword">SELECT</span> @screened=<span class="keyword">COUNT</span>(<span class="number">1</span>) <span class="keyword">FROM</span> student.dbo.UserPassWordSys <span class="keyword">WHERE</span> times=@datetime2</span><br><span class="line">	<span class="keyword">END</span></span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">	<span class="keyword">SET</span> @counts = @a-@screened</span><br><span class="line"></span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+<p>​    把上面的调用的sql正则函数也放在下面，因为想把方法抽象出来这样上面的过程能简单点，实际使用时还是写在一起好，因为在sqlserver中使用正则是创建ole对象调用vbs中的RegExp，调用下面的方法会频繁创建销毁对象，系统效率大打折扣，实际只需在上面过程一开始创建，最后销毁即可。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> dbo.RegExpTest (  </span><br><span class="line">  @<span class="keyword">source</span> <span class="built_in">varchar</span>(<span class="number">5000</span>),   <span class="comment">--需要匹配的源字符串  </span></span><br><span class="line">  @regexp <span class="built_in">varchar</span>(<span class="number">1000</span>),  <span class="comment">--正则表达式  </span></span><br><span class="line">  @ignorecase <span class="built_in">bit</span> = <span class="number">0</span>  <span class="comment">--是否区分大小写，默认为false 1为区分大小写</span></span><br><span class="line"> )  </span><br><span class="line"><span class="keyword">RETURNS</span> <span class="built_in">bit</span>  <span class="comment">--返回结果0-false，1-true  </span></span><br><span class="line"><span class="keyword">AS</span>  </span><br><span class="line"> <span class="keyword">BEGIN</span>  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"> <span class="comment">--0（成功）或非零数字（失败），是由 OLE 自动化对象返回的 HRESULT 的整数值。  </span></span><br><span class="line">  <span class="keyword">DECLARE</span> @hr <span class="built_in">integer</span>  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="comment">--用于保存返回的对象令牌，以便之后对该对象进行操作  </span></span><br><span class="line">  <span class="keyword">DECLARE</span> @objRegExp <span class="built_in">integer</span>   <span class="keyword">DECLARE</span> @objMatches <span class="built_in">integer</span>  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="comment">--保存结果  </span></span><br><span class="line">  <span class="keyword">DECLARE</span> @results <span class="built_in">bit</span>  </span><br><span class="line">   </span><br><span class="line"><span class="comment">/*  </span></span><br><span class="line"><span class="comment">创建 OLE 对象实例,只有 sysadmin 固定服务器角色的成员才能执行 sp_OACreate,并确定机器中有VBScript.RegExp类库  </span></span><br><span class="line"><span class="comment">*/</span>  </span><br><span class="line">  EXEC @hr = sp_OACreate <span class="string">'VBScript.RegExp'</span>, @objRegExp <span class="keyword">OUTPUT</span>  </span><br><span class="line">  <span class="keyword">IF</span> @hr &lt;&gt; <span class="number">0</span> <span class="keyword">BEGIN</span>  </span><br><span class="line">   <span class="keyword">SET</span> @results = <span class="number">0</span>  </span><br><span class="line">   <span class="keyword">RETURN</span> @results  </span><br><span class="line">  <span class="keyword">END</span>  </span><br><span class="line"><span class="comment">/*  </span></span><br><span class="line"><span class="comment">以下三个分别是设置新建对象的三个属性。下面是'VBScript.RegExp'中常用的属性举例：  </span></span><br><span class="line"><span class="comment">    Dim regEx,Match,Matches         '建立变量。  </span></span><br><span class="line"><span class="comment">    Set regEx = New RegExp         '建立一般表达式。  </span></span><br><span class="line"><span class="comment">    regEx.Pattern= patrn         '设置模式。  </span></span><br><span class="line"><span class="comment">    regEx.IgnoreCase = True         '设置是否区分大小写。  </span></span><br><span class="line"><span class="comment">    regEx.Global=True                             '设置全局可用性。  </span></span><br><span class="line"><span class="comment">    set Matches=regEx.Execute(string)             '重复匹配集合  </span></span><br><span class="line"><span class="comment">    RegExpTest = regEx.Execute(strng)      '执行搜索。  </span></span><br><span class="line"><span class="comment">   for each match in matches                    '重复匹配集合  </span></span><br><span class="line"><span class="comment">   RetStr=RetStr &amp;"Match found at position "  </span></span><br><span class="line"><span class="comment">   RetStr=RetStr&amp;Match.FirstIndex&amp;".Match Value is '"  </span></span><br><span class="line"><span class="comment">   RetStr=RetStr&amp;Match.Value&amp;"'."&amp;vbCRLF Next  </span></span><br><span class="line"><span class="comment">   RegExpTest=RetStr  </span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">*/</span> </span><br><span class="line"></span><br><span class="line">  EXEC @hr = sp_OASetProperty @objRegExp, <span class="string">'Pattern'</span>, @regexp  </span><br><span class="line">  <span class="keyword">IF</span> @hr &lt;&gt; <span class="number">0</span> <span class="keyword">BEGIN</span>  </span><br><span class="line">   <span class="keyword">SET</span> @results = <span class="number">0</span>  </span><br><span class="line">   <span class="keyword">RETURN</span> @results  </span><br><span class="line">  <span class="keyword">END</span>  </span><br><span class="line">  EXEC @hr = sp_OASetProperty @objRegExp, <span class="string">'Global'</span>, <span class="literal">false</span>  </span><br><span class="line">  <span class="keyword">IF</span> @hr &lt;&gt; <span class="number">0</span> <span class="keyword">BEGIN</span>  </span><br><span class="line">   <span class="keyword">SET</span> @results = <span class="number">0</span>  </span><br><span class="line">   <span class="keyword">RETURN</span> @results  </span><br><span class="line">  <span class="keyword">END</span>  </span><br><span class="line">  EXEC @hr = sp_OASetProperty @objRegExp, <span class="string">'IgnoreCase'</span>, @ignorecase  </span><br><span class="line">  <span class="keyword">IF</span> @hr &lt;&gt; <span class="number">0</span> <span class="keyword">BEGIN</span>  </span><br><span class="line">   <span class="keyword">SET</span> @results = <span class="number">0</span>  </span><br><span class="line">   <span class="keyword">RETURN</span> @results  </span><br><span class="line">  <span class="keyword">END</span>  </span><br><span class="line"><span class="comment">--调用对象方法  </span></span><br><span class="line">  EXEC @hr = sp_OAMethod @objRegExp, <span class="string">'Test'</span>, @results <span class="keyword">OUTPUT</span>, @<span class="keyword">source</span>  </span><br><span class="line">  <span class="keyword">IF</span> @hr &lt;&gt; <span class="number">0</span> <span class="keyword">BEGIN</span>  </span><br><span class="line">   <span class="keyword">SET</span> @results = <span class="number">0</span>  </span><br><span class="line">   <span class="keyword">RETURN</span> @results  </span><br><span class="line">  <span class="keyword">END</span>  </span><br><span class="line"><span class="comment">--释放已创建的 OLE 对象  </span></span><br><span class="line">  EXEC @hr = sp_OADestroy @objRegExp  </span><br><span class="line">  <span class="keyword">IF</span> @hr &lt;&gt; <span class="number">0</span> <span class="keyword">BEGIN</span>  </span><br><span class="line">   <span class="keyword">SET</span> @results = <span class="number">0</span>  </span><br><span class="line">   <span class="keyword">RETURN</span> @results  </span><br><span class="line">  <span class="keyword">END</span>  </span><br><span class="line"> <span class="keyword">RETURN</span> @results  </span><br><span class="line"> <span class="keyword">END</span>  </span><br><span class="line"> </span><br><span class="line"> <span class="comment">--如果存在问题，需执行以下脚本 启用ole组件</span></span><br><span class="line"> <span class="comment">--sp_configure 'show advanced options', 1;  </span></span><br><span class="line"><span class="comment">--GO  </span></span><br><span class="line"><span class="comment">--RECONFIGURE;  </span></span><br><span class="line"><span class="comment">--GO  </span></span><br><span class="line"><span class="comment">--sp_configure 'Ole Automation Procedures', 1;  </span></span><br><span class="line"><span class="comment">--GO  </span></span><br><span class="line"><span class="comment">--RECONFIGURE;  </span></span><br><span class="line"><span class="comment">--GO</span></span><br></pre></td></tr></table></figure>
+  	
+					
+	  </div>     
+	  
+
+	
+<div class="post-meta">
+      	
+
+      
+        <i class="iconfont icon-tag"></i>     
+          <a class="tag-link" href="/tags/SQL-server/">SQL server</a> <a class="tag-link" href="/tags/时间戳/">时间戳</a>    
+      	
+</div>
+
+
+
+
+
+<div class="post-footer">
+  <div class="pf-left">
+      <img class="pf-avatar" src="/images/header.jpg">
+      <p class="pf-des">人生如逆旅 我亦是行人</p>
+  </div>
+
+  <div class="pf-right">           
+      <div class="pf-links">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/images/donate1.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img" src="/images/donate2.png" alt="No Donate Image!">	
+	</div>
+
+	<span class="donate-word">世界美好 你也是</span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=21d601593a1de"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		   			             
+            <a class="iconfont  icon-share-qq -mob-share-qq"></a>		
+     	   			             
+            <a class="iconfont  icon-share-weixin -mob-share-weixin"></a>		
+     	   			             
+            <a class="iconfont  icon-share-weibo -mob-share-weibo"></a>		
+     	   			             
+            <a class="iconfont  icon-share-douban -mob-share-douban"></a>		
+     	   			             
+            <a class="iconfont  icon-share-facebook -mob-share-facebook"></a>		
+     	   			             
+            <a class="iconfont  icon-share-twitter -mob-share-twitter"></a>		
+     	   			             
+            <a class="iconfont  icon-share-google -mob-share-google"></a>		
+     	   
+	</div>	
+
+      </div>  
+    <nav class="pf-paginator">
+           
+        
+      
+        
+        <a href="/2018/08/10/java数据结构与算法/Java数据结构与算法学习笔记9—二叉树/" data-hover="Java数据结构与算法学习笔记——二叉树"> 下一篇</a>
+            
+  </nav>   
+  </div>
+</div> 
+	
+
+
+    
+    <div id="disqus_thread"></div>
+
+    <script>
+    (function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://'+'lemonreds'+'.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());    
+    (d.head || d.body).appendChild(s);
+    })();
+    </script>
+
+    <noscript>Please enable JavaScript to view the  <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+
+
+	
+</article>
+
+	<div class="sidebar">
+		<h4 class="toc-title">目录</h4>
+		
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">  
+            <span class="search-cancel iconfont icon-cancel"></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+     <div class="mobile-menu">      
+
+      
+      <img class="mobile-menu-icon" src="/images/favicon.ico">   
+      
+
+         
+            
+
+            <a class="mobile-menu-link" href="/">首页
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/archives">归档
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/tags">标签
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/categories">分类
+            </a>
+            
+         
+            
+
+            <a class="mobile-menu-link" href="/about">关于
+            </a>
+            
+         
+                          
+
+            <a class="mobile-menu-link mobile-menu-search" href="#">搜索 </a>                 
+            
+         
+      
+</div>        
+    
+
+
+
+     
+    
+
+
+
+
+<footer id="footer">	    
+
+		
+		<div class="footer-copyright">
+		&copy;
+		
+		2018		
+	
+		roboky
+		<br>
+
+		
+		</div>			
+	 
+</footer>   
+
+  
+
+    <script src="/nayo.bundle.js"></script>           
+  </body>        
+</html>
